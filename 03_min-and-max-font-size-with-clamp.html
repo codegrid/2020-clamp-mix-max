@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>DEMO</title>
+
+<style>
+p {
+  font-size: clamp(10px, 2vw, 30px);
+}
+/* clampに対応していない環境向けのフォールバック */
+@supports not (font-size: clamp(10px, 2vw, 30px)) {
+  p {
+    /* clamp(MIN, VAL, MAX) = min(MAX, max(MIN, VAL)). */
+    font-size: min(30px, max(10px, 2vw));
+  }
+}
+</style>
+
+</head>
+<body>
+
+<p>The quick brown fox jumps over the lazy dog.</p>
+
+</body>
+</html>
