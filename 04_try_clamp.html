@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>DEMO</title>
+<style>
+.demo {
+  display: block;
+  background: #2196f3;
+  border-radius: 4px;
+  color: #fff;
+  padding: 30px;
+  margin-bottom: 20px;
+  font-size: clamp(18px, 5vw, 40px);
+  word-break: break-all;
+}
+.demo.-isMax {
+  background-color: #00bcd4;
+}
+.demo.-isValue {
+  background-color: #3f51b5;
+}
+.size {
+  display: block;
+  white-space: pre-wrap;
+  background-color: #eee;
+}
+</style>
+</head>
+<body>
+
+<h1>ビューポートの幅を変えてどちらが適用されているか確認する</h1>
+<output class="demo"></output>
+<output class="size"></output>
+
+<script>
+const output_demo = document.querySelector('.demo');
+const output_size = document.querySelector('.size');
+
+const render = (e) => {
+
+  const MIN = 18;
+  const VALUE = 5;
+  const MAX = 40;
+
+  const width = document.documentElement.clientWidth;
+  const vw = Math.round(width / 10) / 10; // 小数点第一位基準の四捨五入
+  const isMin = VALUE * vw < MIN;
+  const isMax = VALUE * vw > MAX;
+  const isValue = !isMin && !isMax;
+
+  const style_min   = isMin   ? `<b>${MIN}px</b>` : `${MIN}px`;
+  const style_value = isValue ? `<b>${VALUE}vw</b>`  : `${VALUE}vw`;
+  const style_max   = isMax   ? `<b>${MAX}px</b>` : `${MAX}px`;
+
+  if (isMin) {
+    output_demo.classList.remove('-isValue','-isMax');
+    output_demo.classList.add('-isMin');
+  } else if (isMax) {
+    output_demo.classList.remove('-isValue','-isMin');
+    output_demo.classList.add('-isMax');
+  } else if(isValue) {
+    output_demo.classList.remove('-isMin','-isMax');
+    output_demo.classList.add('-isValue');
+  }
+
+  output_demo.innerHTML = `
+    .demo { font-size: clamp(${style_min}, ${style_value} ,${style_max}) }
+  `;
+
+  output_size.innerHTML = `
+    現在のビューポートの幅は${ width }pxなので、1vwは${ vw }px相当となり、推奨値${VALUE}vwは${ VALUE * vw }px相当になる。
+
+    - 推奨値${ isMin ? `${VALUE}vwは最小値${MIN}pxよりも小さい` : `${VALUE}vwは最小値${MIN}pxよりも大きい` }
+    - 推奨値${ isMax ? `${VALUE}vwは最大値${MAX}pxよりも大きい` : `${VALUE}vwは最大値${MAX}pxよりも小さい` }
+
+    現在は<b>${ isValue ? `推奨値${VALUE}vw` : isMin ? `最小値${MIN}px` : `最大値${MAX}px` }</b>が使われている
+  `;
+
+};
+
+window.addEventListener('load', render);
+window.addEventListener('resize', render);
+</script>
+</body>
+</html>

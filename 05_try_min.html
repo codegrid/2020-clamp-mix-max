@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>DEMO</title>
+<style>
+.demo {
+  display: block;
+  background: #2196f3;
+  border-radius: 4px;
+  color: #fff;
+  padding: 30px;
+  margin-bottom: 20px;
+  font-size: min(2vw, 20px);
+}
+.demo.-isPxOverVew {
+  background-color: #3f51b5;
+}
+.size {
+  display: block;
+  white-space: pre-wrap;
+  background-color: #eee;
+}
+</style>
+</head>
+<body>
+
+<h1>ビューポートの幅を変えてどちらが適用されているか確認する</h1>
+<output class="demo"></output>
+<output class="size"></output>
+
+<script>
+const output_demo = document.querySelector('.demo');
+const output_size = document.querySelector('.size');
+
+const render = (e) => {
+  const width = document.documentElement.clientWidth;
+  const VALUE_VW = 2;
+  const VALUE_PX = 20;
+
+  const vw = Math.round(width / 10) / 10; // 小数点第一位基準の四捨五入
+  const isPxOverVw = vw * VALUE_VW > VALUE_PX;
+  const style_vw = !isPxOverVw ? `<b>${VALUE_VW}vw</b>` : `${VALUE_VW}vw`;
+  const style_px = isPxOverVw ? `<b>${VALUE_PX}px</b>` : `${VALUE_PX}px`;
+
+  if (isPxOverVw) {
+    output_demo.classList.add('-isPxOverVew');
+  } else {
+    output_demo.classList.remove('-isPxOverVew');
+  }
+
+  output_demo.innerHTML = `
+    .demo { font-size: min(${style_vw}, ${style_px}) }
+  `;
+  output_size.innerHTML = `
+    現在のビューポートの幅は${ width }pxなので、1vwは${ vw }px相当となり、${VALUE_VW}vwは${ VALUE_VW * vw }px相当になる。
+
+    ${VALUE_VW}vwと${VALUE_PX}pxを比較すると<b>${ isPxOverVw ? `${VALUE_PX}pxのほうが小さい` : `${VALUE_VW}vwのほうが小さい` }</b>
+
+    現在は<b>${ isPxOverVw ? `2つ目の値である${VALUE_PX}px` : `1つ目の値である${VALUE_VW}vw` }</b>が使われている
+  `;
+};
+
+
+window.addEventListener('load', render);
+window.addEventListener('resize', render);
+</script>
+</body>
+</html>
