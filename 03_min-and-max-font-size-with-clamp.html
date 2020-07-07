@@ -12,8 +12,8 @@ p {
 /* clampに対応していない環境向けのフォールバック */
 @supports not (font-size: clamp(10px, 2vw, 30px)) {
   p {
-    /* clamp(MIN, VAL, MAX) = min(MAX, max(MIN, VAL)). */
-    font-size: min(30px, max(10px, 2vw));
+    /* clamp(MIN, VAL, MAX) = max(MIN, min(VAL, MAX)). */
+    font-size: max(10px, min(2vw, 30px));
   }
 }
 </style>
